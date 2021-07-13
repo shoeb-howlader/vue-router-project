@@ -1,12 +1,17 @@
 <template>
     <div>
 <h1>Jobs</h1>
+<div v-if="jobs.length">
 <div v-for="job in jobs" :key="job.id" class="job">
  <router-link :to="{name:'Jobdetails', params:{id: job.id}}">
      <h2>{{job.title}}</h2>
  </router-link>
+ </div>
  
 </div>
+ <div v-else>
+     <p>loading</p>
+ </div>
     </div>
 </template>
 
@@ -14,12 +19,21 @@
     export default {
         data() {
             return {
-                jobs: [
-                    {title:'this is title' ,  id:1, details:'lorem'},
-                    {title:'this is title' ,  id:2, details:'lorem'},
-                    {title:'this is title' ,  id:3, details:'lorem'}
-                 ]
+                jobs: []
             }
+        },
+        mounted () {
+            fetch('http://localhost:3000/jobs')
+            .then((res)=>{ return res.json()
+
+            })
+            .then((data)=>{
+                this.jobs=data;
+                console.log(data);
+            })
+            .catch((err)=>{
+                console.log(err)
+            });
         },
     }
 </script>
